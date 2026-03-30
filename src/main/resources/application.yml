@@ -47,3 +47,10 @@ info:
     name: "gatewayserver"
     description: "Banking gateway server application"
     version: "1.0.0"
+
+
+logging:
+  level:
+    com:
+      banking:
+        gatewayserver: DEBUG

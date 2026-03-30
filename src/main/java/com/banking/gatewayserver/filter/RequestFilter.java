@@ -24,6 +24,7 @@ public class RequestFilter implements GlobalFilter {
         String traceId = filterUtility.getTraceId(exchange.getRequest().getHeaders())
                 .orElseGet(filterUtility::generateTraceId);
         logger.debug("Trace-Id  of the current request is: {}", traceId);
+        exchange = filterUtility.setRequestHeaders(exchange, FilterUtility.TRACE_ID, traceId);
         return chain.filter(exchange);
     }
 }
