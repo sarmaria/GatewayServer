@@ -10,7 +10,7 @@ spring:
         webflux:
           discovery:
             locator:
-              enabled: true
+              enabled: false
               # To allow lower case on the microservice name in the url
               lower-case-service-id: true
 
