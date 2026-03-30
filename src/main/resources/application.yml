@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: "gatewayserver"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  # To tell gateway server to connect to eureka server to get service discovery details -->
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              # To allow lower case on the microservice name in the url
+              lower-case-service-id: true
+
+  # Temporarily disabling rabbitmq dependencies
+  # rabbitmq:
+  #   host: "localhost"
+  #   port: 5672
+  #   username: "guest"
+  #   password: "guest"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8070/eureka/
+
+# Helps in display of the Eureka Dashboard
+info:
+  app:
+    name: "gatewayserver"
+    description: "Banking gateway server application"
+    version: "1.0.0"
