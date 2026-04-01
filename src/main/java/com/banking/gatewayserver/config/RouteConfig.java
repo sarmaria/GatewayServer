@@ -15,6 +15,7 @@ public class RouteConfig {
     private static final String ACCOUNTS_SERVICE_NAME = "ACCOUNTS";
     private static final String CARDS_SERVICE_NAME = "CARDS";
     private static final String LOANS_SERVICE_NAME = "LOANS";
+    private static final String ACCOUNT_CIRCUIT_BREAKER = "accountCircuitBreaker";
     public static final String RESPONSE_TIME_HEADER = "X-Response-Time";
 
     @Bean
@@ -23,8 +24,10 @@ public class RouteConfig {
                 .route(route -> route
                         .path(ACCOUNTS_WITH_BAKNING_URI_PATH +"**")
                         .filters(uri -> uri.rewritePath(ACCOUNTS_WITH_BAKNING_URI_PATH+"(?<segment>.*)", "/${segment}")
+                                .circuitBreaker(config -> config.setName(ACCOUNT_CIRCUIT_BREAKER) // redirects /banking/accounts/api/create to /api/create
+                                        .setFallbackUri("forward:/contactSupport")) // fallbacks to FallbackBackController instead of showing server side error to client
                                 .addResponseHeader(RESPONSE_TIME_HEADER, Instant.now().toString()))
-                        .uri("lb://"+ACCOUNTS_SERVICE_NAME))
+                        .uri("lb://"+ACCOUNTS_SERVICE_NAME)) // tells which service to find in the eureka discovery server
                 .route(route -> route
                         .path(CARDS_WITH_BAKNING_URI_PATH +"**")
                         .filters(uri -> uri.rewritePath(CARDS_WITH_BAKNING_URI_PATH+"(?<segment>.*)", "/${segment}")
